@@ -1,0 +1,54 @@
+{
+  "actions": [
+    {
+      "type": "comment",
+      "note": "これは設定ファイルのサンプルです。自由に編集してください。"
+    },
+    {
+      "type": "wait",
+      "seconds": 1,
+      "note": "1秒待機"
+    },
+    {
+      "type": "click",
+      "x": 500,
+      "y": 300,
+      "button": "left",
+      "clicks": 1,
+      "note": "座標(500, 300)を左クリック"
+    },
+    {
+      "type": "wait",
+      "seconds": 0.5,
+      "note": "0.5秒待機"
+    },
+    {
+      "type": "click",
+      "x": 700,
+      "y": 400,
+      "button": "left",
+      "clicks": 2,
+      "note": "座標(700, 400)をダブルクリック"
+    },
+    {
+      "type": "wait",
+      "seconds": 1,
+      "note": "1秒待機"
+    },
+    {
+      "type": "move",
+      "x": 800,
+      "y": 500,
+      "duration": 0.5,
+      "note": "座標(800, 500)へ0.5秒かけて移動"
+    },
+    {
+      "type": "click",
+      "x": 800,
+      "y": 500,
+      "button": "right",
+      "clicks": 1,
+      "note": "右クリック"
+    }
+  ]
+}

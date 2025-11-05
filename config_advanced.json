@@ -1,0 +1,101 @@
+{
+  "actions": [
+    {
+      "type": "comment",
+      "note": "高度な設定例 - さまざまなアクションのサンプル"
+    },
+    {
+      "type": "wait",
+      "seconds": 2,
+      "note": "初期待機"
+    },
+    {
+      "type": "click",
+      "x": 100,
+      "y": 100,
+      "button": "left",
+      "clicks": 1,
+      "note": "ウィンドウをアクティブ化"
+    },
+    {
+      "type": "wait",
+      "seconds": 0.5
+    },
+    {
+      "type": "hotkey",
+      "keys": ["ctrl", "a"],
+      "note": "Ctrl+A (全選択)"
+    },
+    {
+      "type": "wait",
+      "seconds": 0.3
+    },
+    {
+      "type": "press",
+      "key": "delete",
+      "presses": 1,
+      "note": "Deleteキーを押す"
+    },
+    {
+      "type": "wait",
+      "seconds": 0.5
+    },
+    {
+      "type": "type",
+      "text": "Hello World",
+      "interval": 0.05,
+      "note": "テキストを入力（英数字のみ対応）"
+    },
+    {
+      "type": "wait",
+      "seconds": 1
+    },
+    {
+      "type": "press",
+      "key": "enter",
+      "presses": 1,
+      "note": "Enterキーを押す"
+    },
+    {
+      "type": "wait",
+      "seconds": 0.5
+    },
+    {
+      "type": "scroll",
+      "amount": -3,
+      "note": "上にスクロール（負の値で上、正の値で下）"
+    },
+    {
+      "type": "wait",
+      "seconds": 1
+    },
+    {
+      "type": "scroll",
+      "amount": 3,
+      "x": 500,
+      "y": 500,
+      "note": "座標(500,500)で下にスクロール"
+    },
+    {
+      "type": "wait",
+      "seconds": 0.5
+    },
+    {
+      "type": "click",
+      "x": 300,
+      "y": 300,
+      "button": "left",
+      "clicks": 3,
+      "note": "トリプルクリック（テキスト行選択など）"
+    },
+    {
+      "type": "wait",
+      "seconds": 1
+    },
+    {
+      "type": "hotkey",
+      "keys": ["ctrl", "s"],
+      "note": "Ctrl+S (保存)"
+    }
+  ]
+}
