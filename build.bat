@@ -20,8 +20,8 @@ if %ERRORLEVEL% NEQ 0 (
 )
 echo.
 
-echo [2/3] PyInstallerでEXEをビルド中...
-pyinstaller --onefile --windowed --name auto_clicker --icon=NONE auto_clicker.py
+echo [2/4] PyInstallerでEXEをビルド中...
+pyinstaller --onefile --console --name auto_clicker auto_clicker.py
 if %ERRORLEVEL% NEQ 0 (
     echo エラー: ビルドに失敗しました
     pause
@@ -29,20 +29,33 @@ if %ERRORLEVEL% NEQ 0 (
 )
 echo.
 
-echo [3/3] 設定ファイルをdistフォルダにコピー...
+echo [3/4] キャプチャツールをビルド中...
+pyinstaller --onefile --windowed --name capture_target capture_target.py
+if %ERRORLEVEL% NEQ 0 (
+    echo 警告: キャプチャツールのビルドに失敗しました（スキップ）
+)
+echo.
+
+echo [4/4] 設定ファイルとtargetsフォルダをdistにコピー...
 copy config.json dist\config.json
 copy config_advanced.json dist\config_advanced.json
+xcopy /E /I /Y targets dist\targets
 echo.
 
 echo =====================================
 echo ビルド完了！
 echo =====================================
 echo.
-echo 実行ファイル: dist\auto_clicker.exe
+echo 実行ファイル:
+echo   - dist\auto_clicker.exe       (メインプログラム)
+echo   - dist\capture_target.exe     (標的画像キャプチャツール)
+echo.
 echo 設定ファイル: dist\config.json
+echo 標的画像フォルダ: dist\targets\
 echo.
 echo 使い方:
-echo 1. config.json を編集してクリック動作を設定
-echo 2. auto_clicker.exe を実行
+echo 1. capture_target.exe で標的画像を作成（targetsフォルダに保存）
+echo 2. config.json を編集してクリック動作を設定
+echo 3. auto_clicker.exe を実行
 echo.
 pause

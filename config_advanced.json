@@ -2,7 +2,7 @@
   "actions": [
     {
       "type": "comment",
-      "note": "高度な設定例 - さまざまなアクションのサンプル"
+      "note": "高度な設定例 - 画像認識とその他のアクションの組み合わせ"
     },
     {
       "type": "wait",
@@ -10,12 +10,17 @@
       "note": "初期待機"
     },
     {
-      "type": "click",
-      "x": 100,
-      "y": 100,
-      "button": "left",
-      "clicks": 1,
-      "note": "ウィンドウをアクティブ化"
+      "type": "click_image",
+      "image": "app_icon.png",
+      "confidence": 0.85,
+      "timeout": 10,
+      "note": "アプリアイコンをクリックして起動"
+    },
+    {
+      "type": "wait_for_image",
+      "image": "window_ready.png",
+      "timeout": 15,
+      "note": "ウィンドウが開くまで待機"
     },
     {
       "type": "wait",
@@ -81,12 +86,33 @@
       "seconds": 0.5
     },
     {
-      "type": "click",
-      "x": 300,
-      "y": 300,
-      "button": "left",
+      "type": "click_image",
+      "image": "text_field.png",
       "clicks": 3,
-      "note": "トリプルクリック（テキスト行選択など）"
+      "note": "テキストフィールドをトリプルクリック（全選択）"
+    },
+    {
+      "type": "wait",
+      "seconds": 0.3
+    },
+    {
+      "type": "click_image",
+      "image": "submit_button.png",
+      "offset_x": 0,
+      "offset_y": 5,
+      "note": "送信ボタンをクリック（Y軸に5px下にオフセット）"
+    },
+    {
+      "type": "wait",
+      "seconds": 0.5
+    },
+    {
+      "type": "click_image",
+      "image": "close_button.png",
+      "confidence": 0.9,
+      "grayscale": true,
+      "timeout": 3,
+      "note": "閉じるボタンをクリック（グレースケールで高速検索）"
     },
     {
       "type": "wait",

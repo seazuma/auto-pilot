@@ -41,3 +41,7 @@ desktop.ini
 
 # Logs
 *.log
+
+# Target images (except .gitkeep)
+targets/*
+!targets/.gitkeep

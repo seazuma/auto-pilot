@@ -2,7 +2,7 @@
   "actions": [
     {
       "type": "comment",
-      "note": "これは設定ファイルのサンプルです。自由に編集してください。"
+      "note": "画像認識版 - 標的画像を探してクリックします"
     },
     {
       "type": "wait",
@@ -10,25 +10,13 @@
       "note": "1秒待機"
     },
     {
-      "type": "click",
-      "x": 500,
-      "y": 300,
+      "type": "click_image",
+      "image": "button_start.png",
       "button": "left",
       "clicks": 1,
-      "note": "座標(500, 300)を左クリック"
-    },
-    {
-      "type": "wait",
-      "seconds": 0.5,
-      "note": "0.5秒待機"
-    },
-    {
-      "type": "click",
-      "x": 700,
-      "y": 400,
-      "button": "left",
-      "clicks": 2,
-      "note": "座標(700, 400)をダブルクリック"
+      "confidence": 0.8,
+      "timeout": 5,
+      "note": "「開始」ボタンを探してクリック"
     },
     {
       "type": "wait",
@@ -36,19 +24,30 @@
       "note": "1秒待機"
     },
     {
-      "type": "move",
-      "x": 800,
-      "y": 500,
-      "duration": 0.5,
-      "note": "座標(800, 500)へ0.5秒かけて移動"
+      "type": "wait_for_image",
+      "image": "dialog_confirm.png",
+      "timeout": 10,
+      "note": "確認ダイアログが表示されるまで待機"
     },
     {
-      "type": "click",
-      "x": 800,
-      "y": 500,
-      "button": "right",
+      "type": "click_image",
+      "image": "button_ok.png",
+      "button": "left",
       "clicks": 1,
-      "note": "右クリック"
+      "note": "OKボタンをクリック"
+    },
+    {
+      "type": "wait",
+      "seconds": 0.5
+    },
+    {
+      "type": "click_image",
+      "image": "button_next.png",
+      "button": "left",
+      "clicks": 1,
+      "offset_x": 0,
+      "offset_y": 0,
+      "note": "次へボタンをクリック（オフセット調整可能）"
     }
   ]
 }

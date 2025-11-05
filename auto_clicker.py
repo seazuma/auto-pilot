@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Windows自動クリックツール
-設定ファイル(config.json)を読み込んで、指定された順序でクリック操作を実行します
+Windows自動クリックツール（画像認識版）
+設定ファイル(config.json)を読み込んで、画像認識で標的を探してクリックします
 """
 
 import pyautogui
@@ -14,6 +14,9 @@ from pathlib import Path
 
 # PyAutoGUIの安全機能: マウスを画面の隅に移動すると緊急停止
 pyautogui.FAILSAFE = True
+
+# 標的画像を保存するフォルダ
+TARGETS_DIR = "targets"
 
 
 class AutoClicker:
@@ -46,6 +49,54 @@ class AutoClicker:
             print(f"エラー: 設定ファイルの読み込みに失敗しました: {e}")
             return False
 
+    def find_image(self, image_name, confidence=0.8, grayscale=False, timeout=5):
+        """
+        画面上で画像を検索
+
+        Args:
+            image_name: 画像ファイル名
+            confidence: 一致度 (0.0-1.0)
+            grayscale: グレースケールで検索（高速化）
+            timeout: タイムアウト時間（秒）
+
+        Returns:
+            見つかった場合は座標のタプル (x, y)、見つからない場合はNone
+        """
+        image_path = os.path.join(TARGETS_DIR, image_name)
+
+        if not os.path.exists(image_path):
+            print(f"\nエラー: 画像ファイル '{image_path}' が見つかりません")
+            return None
+
+        start_time = time.time()
+        attempt = 0
+
+        while time.time() - start_time < timeout:
+            attempt += 1
+            try:
+                location = pyautogui.locateCenterOnScreen(
+                    image_path,
+                    confidence=confidence,
+                    grayscale=grayscale
+                )
+
+                if location is not None:
+                    return location
+
+                # 短い間隔で再試行
+                if time.time() - start_time < timeout:
+                    time.sleep(0.5)
+
+            except pyautogui.ImageNotFoundException:
+                if time.time() - start_time < timeout:
+                    time.sleep(0.5)
+                continue
+            except Exception as e:
+                print(f"\n画像検索エラー: {e}")
+                return None
+
+        return None
+
     def execute_action(self, action, index):
         """
         1つのアクションを実行
@@ -59,7 +110,58 @@ class AutoClicker:
         print(f"\n[{index + 1}] {action_type}: ", end='')
 
         try:
-            if action_type == 'click':
+            if action_type == 'click_image':
+                # 画像認識でクリック
+                image = action.get('image')
+                button = action.get('button', 'left')
+                clicks = action.get('clicks', 1)
+                confidence = action.get('confidence', 0.8)
+                grayscale = action.get('grayscale', False)
+                timeout = action.get('timeout', 5)
+                offset_x = action.get('offset_x', 0)
+                offset_y = action.get('offset_y', 0)
+
+                if not image:
+                    print(f"エラー: 画像ファイル名が指定されていません")
+                    return False
+
+                print(f"画像 '{image}' を検索中...", end='', flush=True)
+                location = self.find_image(image, confidence, grayscale, timeout)
+
+                if location is None:
+                    print(f" 見つかりませんでした（タイムアウト: {timeout}秒）")
+                    return False
+
+                # オフセットを適用
+                click_x = location[0] + offset_x
+                click_y = location[1] + offset_y
+
+                print(f" 発見! ({location[0]}, {location[1]})")
+                print(f"    → 座標({click_x}, {click_y})を{button}ボタンで{clicks}回クリック")
+                pyautogui.click(click_x, click_y, clicks=clicks, button=button)
+
+            elif action_type == 'wait_for_image':
+                # 画像が表示されるまで待機
+                image = action.get('image')
+                confidence = action.get('confidence', 0.8)
+                grayscale = action.get('grayscale', False)
+                timeout = action.get('timeout', 30)
+
+                if not image:
+                    print(f"エラー: 画像ファイル名が指定されていません")
+                    return False
+
+                print(f"画像 '{image}' が表示されるまで待機（最大{timeout}秒）...", end='', flush=True)
+                location = self.find_image(image, confidence, grayscale, timeout)
+
+                if location is None:
+                    print(f" タイムアウト")
+                    return False
+
+                print(f" 発見! ({location[0]}, {location[1]})")
+
+            elif action_type == 'click':
+                # 座標指定でクリック（従来の方式）
                 x = action.get('x')
                 y = action.get('y')
                 button = action.get('button', 'left')
@@ -186,7 +288,11 @@ def main():
     print("-"*50)
     for i, action in enumerate(clicker.actions):
         action_type = action.get('type', 'click')
-        if action_type == 'click':
+        if action_type == 'click_image':
+            print(f"{i+1}. 画像クリック - '{action.get('image')}'")
+        elif action_type == 'wait_for_image':
+            print(f"{i+1}. 画像待機 - '{action.get('image')}'")
+        elif action_type == 'click':
             print(f"{i+1}. クリック - 座標({action.get('x')}, {action.get('y')})")
         elif action_type == 'wait':
             print(f"{i+1}. 待機 - {action.get('seconds')}秒")
